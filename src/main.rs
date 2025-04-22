@@ -6,49 +6,65 @@ use clap::Parser;
 use std::env::current_dir;
 use std::fs::{exists, remove_file, OpenOptions};
 use std::process::exit;
+use std::sync::mpsc;
+use std::thread;
 use {args::*, overwrite::*};
 fn main() {
     let args = ShredArgs::parse();
     //args= iterations, size, file, verbosity
 
     //implement a function to check errors?
-    let filename = args.file.clone();
-    let path = match current_dir() {
-        Ok(v) => v,
-        Err(e) => {
-            eprintln!("{e}");
-            exit(1)
-        }
-    };
-    let _exists = match exists(filename.clone()) {
-        /*File does not exist*/
-        Ok(false) => {
-            eprintln!(
-                "Error: {}/{filename} is either missing, or does not exist.",
-                path.display()
-            );
-            exit(1)
-        }
-        /*Some unknown error*/
-        Err(_e) => {
-            eprintln!("something went wrong when searching for the file, exiting program.");
-            exit(1);
-        }
-        /*File does exist*/
-        Ok(true) => (),
-    };
+    for i in args.file {
+        let filename = i;
+        let (ftx, frx) = mpsc::channel();
+        ftx.send(filename.clone()).unwrap();
+        let path = match current_dir() {
+            Ok(v) => v,
+            Err(e) => {
+                eprintln!("{e}");
+                exit(1)
+            }
+        };
+        let _exists = match exists(filename.clone()) {
+            /*File does not exist*/
+            Ok(false) => {
+                eprintln!(
+                    "Error: {}/{filename} is either missing, or does not exist.",
+                    path.display()
+                );
+                exit(1)
+            }
+            /*Some unknown error*/
+            Err(_e) => {
+                eprintln!("something went wrong when searching for the file, exiting program.");
+                exit(1);
+            }
+            /*File does exist*/
+            Ok(true) => (),
+        };
+        let check_directory = std::fs::metadata(filename.clone()).unwrap();
+        match check_directory.is_dir() {
+            false => {
+                thread::spawn(move || {
+                    let files = frx.recv().unwrap();
+                    shred(
+                        args.iterations,
+                        args.size,
+                        files.clone(),
+                        args.verbose,
+                        args.zero,
+                    )
+                    .unwrap();
+                })
+                .join()
+                .unwrap();
 
-    shred(
-        args.iterations,
-        args.size,
-        args.file,
-        args.verbose,
-        args.zero,
-    )
-    .unwrap();
-
-    if args.delete {
-        remove_file(filename).unwrap();
+                if args.delete {
+                    remove_file(filename).unwrap();
+                }
+            }
+            true => eprintln!("{filename} is a directory"),
+        }
     }
 }
 
@@ -68,8 +84,8 @@ fn shred(
         .unwrap();
 
     let file_metadata = std::fs::metadata(filename.clone()).unwrap();
-
     // dbg!(&file_metadata);
+
     let mut count: u64 = 0;
     match size {
         // modules==> overwrite::*

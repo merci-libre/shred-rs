@@ -20,5 +20,5 @@ pub struct ShredArgs {
     pub delete: bool,
     /// Overwrites specified files repeatedly with random bytes, making a recovery process for the
     /// desired data much more expensive and costly for an attacker.
-    pub file: String,
+    pub file: Vec<String>,
 }
