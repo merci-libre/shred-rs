@@ -1,5 +1,5 @@
 # shred-rs
-A Rewrite of the `shred` [CoreUtil]https://github.com/coreutils/coreutils/blob/master/src/shred.c]. Rewritten in Rust.
+A Rewrite of the `shred` [CoreUtil](https://github.com/coreutils/coreutils/blob/master/src/shred.c). Rewritten in Rust.
 
 Still rewrites the entire sector by default, see below for changes. 
 
