@@ -12,10 +12,18 @@ Differences between Original and Rust Rewrite:
 Report all bugs inside of issues.
 
 ## Notable improvements and trade-offs
+### TO-DO's
 -  Intensive CPU utilization (Wouldn't run this on an old microcontroller, but my Rasp Pi did fine when running this...)
 -  No file-renaming on removal (To be added)
+-  Missing key features (advanced file removal, byte sourcing from external files, file permissions, etc)
 
 These features are planned to be adjusted or added with future optimizations and versions.
+
+### Improvements
+- 1.92x faster than the original (from my testing, this may vary from machine to machine)
+- Multithreading and concurrent process handling.
+
+and more to come!
 
 ## Philosophy and Mission
 
