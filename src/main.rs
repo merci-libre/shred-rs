@@ -69,7 +69,7 @@ fn main() {
 }
 
 fn shred(
-    iterations: u64,
+    mut iterations: u64,
     size: usize,
     filename: String,
     verbose: bool,
@@ -87,14 +87,30 @@ fn shred(
     // dbg!(&file_metadata);
 
     let mut count: u64 = 0;
+    if zero {
+        iterations += 1;
+    }
     match size {
         // modules==> overwrite::*
         0 => {
             while count != iterations {
-                if verbose {
-                    eprintln!("shred: {filename}: pass {}/{iterations}...", count + 1);
-                }
                 large_overwrite(&file, &file_metadata, false);
+                if count == iterations - 1 && zero {
+                    if verbose {
+                        eprintln!(
+                            "shred: {filename}: pass {}/{iterations} (000000)...",
+                            count + 1
+                        );
+                    }
+                    large_overwrite(&file, &file_metadata, zero);
+                } else {
+                    if verbose {
+                        eprintln!(
+                            "shred: {filename}: pass {}/{iterations} (random)...",
+                            count + 1
+                        );
+                    }
+                }
 
                 count += 1;
             }
@@ -108,9 +124,6 @@ fn shred(
                 count += 1;
             }
         }
-    }
-    if zero {
-        large_overwrite(&file, &file_metadata, zero);
     }
 
     Ok(())
