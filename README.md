@@ -20,7 +20,7 @@ Report all bugs inside of issues.
 These features are planned to be adjusted or added with future optimizations and versions.
 
 ### Improvements
-- runs way faster than the original, 1000 files at 300 passes was 5.83x faster than the original (as of version 0.2.1) (from my testing, this may vary from machine to machine)
+- runs way faster than the original, 1000 13 byte (1 sector) of files at 300 passes was 5.83x faster than the original (as of version 0.2.1) (from my testing additionally, on an ssd, although results may vary from machine to machine)
 - Multithreading and concurrent process handling.
 - supports 
 
