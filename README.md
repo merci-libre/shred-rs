@@ -7,7 +7,7 @@ Build with `cargo --build release`.
 
 Differences between Original and Rust Rewrite:
 - Original still utilizes less resources (see next point)
-- All bytes inputted are generated randomly, increasing CPU utilization.
+- Missing some original features such as pattern-based shredding and utilizing random bytes, although this feature might be added in the next version.
 
 Report all bugs inside of issues.
 
@@ -20,8 +20,9 @@ Report all bugs inside of issues.
 These features are planned to be adjusted or added with future optimizations and versions.
 
 ### Improvements
-- 1.92x faster than the original (from my testing, this may vary from machine to machine)
+- runs way faster than the original, 1000 files at 300 passes was 5.83x faster than the original (as of version 0.2.1) (from my testing, this may vary from machine to machine)
 - Multithreading and concurrent process handling.
+- supports 
 
 and more to come!
 
