@@ -55,13 +55,12 @@ fn main() {
                         args.zero,
                     )
                     .unwrap();
+                    if args.delete {
+                        remove_file(filename).unwrap();
+                    }
                 })
                 .join()
                 .unwrap();
-
-                if args.delete {
-                    remove_file(filename).unwrap();
-                }
             }
             true => eprintln!("{filename} is a directory"),
         }
@@ -94,7 +93,6 @@ fn shred(
         // modules==> overwrite::*
         0 => {
             while count != iterations {
-                large_overwrite(&file, &file_metadata, false);
                 if count == iterations - 1 && zero {
                     if verbose {
                         eprintln!(
@@ -110,6 +108,7 @@ fn shred(
                             count + 1
                         );
                     }
+                    large_overwrite(&file, &file_metadata, false);
                 }
 
                 count += 1;

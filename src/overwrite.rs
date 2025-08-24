@@ -46,7 +46,6 @@ pub fn large_overwrite(mut file: &File, file_metadata: &Metadata, zero: bool) {
             multiplier = (file_metadata.len() / 4096) + 1;
         }
         start_iterations *= multiplier;
-        dbg!(&start_iterations, multiplier);
     }
     rand_overwrite(start_iterations as usize, file, opt);
 }
